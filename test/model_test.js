@@ -140,16 +140,102 @@ describe('ModelTest', function () {
             });
 
             it("should return an error when a nonexistent username is passed", function() {
-               return User.getUserId("nonexistent").should.be.rejected.and.should.eventually.have.property(
-                   'message', 'Username nonexistent not found.');
+               return User.getUserId("nonexistent").should.be.rejected.and.should.eventually.have.property('message',
+                   'Username nonexistent not found.');
             });
+
+        });
+
+    });
+
+    describe('Book', function () {
+        var Book = require('../models/book_model');
+
+        var username = 'username123';
+        var firstBook = {
+            name: "Introduction To Algorithms",
+            author: 'Thomas H. Cormen',
+            description: 'Really good book that introduces people to fundamentals algorithms and data structures.',
+            isbn: "978-0262033848",
+            book_cover_url: "http://images.betterworldbooks.com/026/Introduction-to-Algorithms-Third-Edition-Cormen-Thomas-H-9780262533058.jpg"
+        };
+
+        before(function (done) {
+            db.none("CREATE TABLE books( " +
+                    "id SERIAL PRIMARY KEY," +
+                    "name varchar(200) NOT NULL, " +
+                    "author varchar(300)," +
+                    "description text," +
+                    "isbn varchar(14)," +
+                    "book_cover_url varchar(200)," +
+                    "owner_id integer REFERENCES users(id))")
+                .then(function () {
+                    console.log("Created books");
+                    done();
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        });
+
+        describe('addBook', function () {
+
+
+            it('should add book when passed valid info', function () {
+                return Book.addBook(username, firstBook).should.be.fulfilled;
+            });
+
+            it('should display error when wrong username is passed', function() {
+                return Book.addBook('wrongusername', firstBook).should.be.rejected.and.eventually.have.property('message',
+                    'Username wrongusername not found.');
+            });
+
+            /* TODO: Add test for displaying the user-friendly message */
+            it('should not add a book when one of the parameters is too long', function () {
+                var wrongBook = {
+                    name: "Introduction To Algorithms",
+                    author: "author".repeat(70),
+                    description: 'Really good book that introduces people to fundamentals algorithms and data structures.',
+                    isbn: "978-0262033848",
+                    book_cover_url: "http://images.betterworldbooks.com/026/Introduction-to-Algorithms-Third-Edition-Cormen-Thomas-H-9780262533058.jpg"
+                };
+                return Book.addBook(username, wrongBook).should.be.rejected;
+            });
+
+        });
+
+        describe('getUserBook', function() {
+            it('should display error when wrong username is passed', function() {
+                return Book.getUserBooks('wrongusername').should.be.rejected.and.eventually.have.property('message',
+                    'Username wrongusername not found.');
+            });
+
+            it('should return an array of books that belong to this user', function() {
+                return Book.getUserBooks(username).should.be.fulfilled.and.eventually.deep.equal([firstBook]);
+            });
+        });
+        
+        describe('getUserBooksIds', function() {
+           
+            it('should display an error when a wrong username is passed', function() {
+                return Book.getUserBooksIds('wrongusername').should.be.rejected.and.eventually.have.property('message',
+                    'Username wrongusername not found.');
+            });
+
+            it('should return an array of book ids that belong to this user', function() {
+               return Book.getUserBooksIds(username).should.be.fulfilled.and.eventually.deep.equal([{id: 1}]);
+            });
+            
         });
 
     });
 
     after(function (done) {
         /* TODO: DO it with batches */
-        db.none("DROP TABLE users")
+        db.none("DROP TABLE users CASCADE")
+            .then(function () {
+                return db.none("DROP TABLE books");
+            })
             .then(function() {
                 done();
             })

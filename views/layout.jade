@@ -2,6 +2,18 @@ doctype html
 html
   head
     title= title
+    meta(charset="utf-8")
+    meta(http-equiv="x-ua-compatible", content="ie=edge")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    link(rel="stylesheet", href="/stylesheets/foundation.min.css")
     link(rel='stylesheet', href='/stylesheets/style.css')
+    block pageCSS
+
   body
     block content
+
+  script(src="/javascripts/jquery.js")
+  script(src="/javascripts/what-input.js")
+  script(src="/javascripts/foundation.min.js")
+  script.
+    $(document).foundation();

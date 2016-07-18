@@ -1,8 +1,26 @@
 body {
-  padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
-a {
-  color: #00B7FF;
+
+.top-bar, .menu > li {
+  background-color: #66310E;
+}
+
+.top-bar-title {
+  color: #f9f9f9;
+  margin: 5px;
+  font-size: 1.5em;
+  padding: 0;
+}
+
+.menu {
+  a {
+    color: #f9f9f9;
+  }
+  li {
+    &:hover {
+      background-color: #8C4313;
+    }
+  }
 }

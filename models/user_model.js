@@ -194,6 +194,7 @@ var getUserId = function(username) {
                   reject(usernameNotFoundError(username));
           })
           .catch(function (error) {
+              console.log(error);
               reject(internalDatabaseError());
           });
   });

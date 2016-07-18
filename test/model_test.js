@@ -168,7 +168,8 @@ describe('ModelTest', function () {
                     "description text," +
                     "isbn varchar(14)," +
                     "book_cover_url varchar(200)," +
-                    "owner_id integer REFERENCES users(id))")
+                    "owner_id integer REFERENCES users(id)," +
+                    "borrowed_to integer REFERENCES users(id))")
                 .then(function () {
                     console.log("Created books");
                     done();
@@ -211,7 +212,15 @@ describe('ModelTest', function () {
             });
 
             it('should return an array of books that belong to this user', function() {
-                return Book.getUserBooks(username).should.be.fulfilled.and.eventually.deep.equal([firstBook]);
+                return Book.getUserBooks(username).should.be.fulfilled.and.eventually.deep.equal([{
+                    name: firstBook.name,
+                    author: firstBook.author,
+                    description: firstBook.description,
+                    isbn: firstBook.isbn,
+                    book_cover_url: firstBook.book_cover_url,
+                    id: 1,
+                    borrowed_to: null
+                }]);
             });
         });
         
@@ -228,13 +237,130 @@ describe('ModelTest', function () {
             
         });
 
+        describe('getBookOwner', function() {
+
+            it('should display an error when wrong book id is passed', function() {
+               return Book.getBookOwner(1000).should.be.rejected.and.eventually.have.property('message');
+            });
+
+            it('should return a proper user id when passed valid info', function() {
+                return Book.getBookOwner(1).should.be.fulfilled.and.eventually.deep.equal(1);
+            });
+        })
+
     });
+
+    describe('Trade', function () {
+        var user1 = {
+            username: "johnking",
+            password: "password123",
+            email: "johncena@gmail.com"
+        };
+        var user2 = {
+            username: "mcwestside",
+            password: "pword00921",
+            email: "loveitbaby2@yahoo.com"
+        };
+
+        var book1 = {
+            name: "Harry Potter and the Prisoner of Azkaban",
+            author: "J.K. Rowling",
+            description: "Third iteration of the Harry Potter saga. Sirius Black escaped the prison...",
+            isbn: "0439136369",
+            book_cover_url: "http://pics1.this-pic.com/key/harry%20potter%20and%20the%20prisoner%20of%20azkaban%20book%20cover"
+        };
+
+        var book2 = {
+            name: "Hitchhiker's Guide to the Galaxy",
+            author: "Douglas Adams",
+            isbn: "0345391802",
+            book_cover_url: "https://2.bp.blogspot.com/-ED0m4tnNFUM/UP80yHRExFI/AAAAAAAACxM/I2yCxLiGcXY/s320/adams.hitchfive.cov.gif"
+        };
+
+        var book1Id = 2,
+            book2Id = 3,
+            user1Id = 5,
+            user2Id = 6;
+
+        var Trade = require('../models/trade_model');
+        var User = require('../models/user_model');
+        var Book = require('../models/book_model');
+        before(function(done) {
+           db.none("CREATE TABLE trades(" +
+               "request_by integer REFERENCES users(id)," +
+               "requested_book integer REFERENCES books(id)," +
+               "request_to integer REFERENCES users(id)," +
+               "accepted_book integer REFERENCES books(id)," +
+               "trade_accepted boolean," +
+               "trade_start date," +
+               "trade_end date)")
+               .then(function() {
+                   User.addUser(user1.username, user1.password, user1.email);
+               })
+               .then(function() {
+                   User.addUser(user2.username, user2.password, user2.email);
+               })
+               .then(function() {
+                   Book.addBook(user1.username, book1);
+               })
+               .then(function() {
+                   Book.addBook(user2.username, book2);
+               })
+               .then(function() {
+                   done();
+               })
+               .catch(function(error) {
+                   console.log(error);
+               });
+        });
+
+        describe('requestBook', function() {
+            it('should return an error when wrong username is passed', function() {
+                return Trade.requestBook('wrongusername', book1Id).should.be.rejected.and.eventually.have.property('message',
+                    'Username wrongusername not found.');
+            });
+
+            it('should return an error when trying to trade books with yourself', function() {
+               return Trade.requestBook(user1.username, book1Id).should.be.rejected.and.eventually.have.property('message',
+               "You can't trade books with yourself.");
+            });
+
+            it('should add a new trade request when valid info is passed', function() {
+               return Trade.requestBook(user1.username, book2Id).should.be.fulfilled;
+            });
+        });
+        
+        describe('acceptTrade', function() {
+            it('should properly accept trade when passed valid info and the other user selects a book', function() {
+                var currentDate = new Date();
+                var tradeEndDate = new Date(parseInt(currentDate.getFullYear() + 1) + "-"
+                    + currentDate.getMonth() + "-" + currentDate.getDate());
+               return Trade.acceptTrade(user2.username, book2Id, null, tradeEndDate).should.be.fulfilled;
+            });
+
+            it('should properly update table books to reflect the  successful trade', function() {
+                return Book.getBookById(book2Id).should.eventually.have.property('borrowed_to', user1Id);
+            });
+
+            it('should return an error when trying to trade a book that isnt in your possession', function() {
+                return Trade.acceptTrade(user2.username, book2Id, null, null).should.be.rejected.and.eventually.
+                    have.property('message', "You have already borrowed this book.");
+            })
+        });
+        
+        
+    });
+
+
 
     after(function (done) {
         /* TODO: DO it with batches */
         db.none("DROP TABLE users CASCADE")
             .then(function () {
-                return db.none("DROP TABLE books");
+                return db.none("DROP TABLE books CASCADE");
+            })
+            .then(function() {
+                return db.none("DROP TABLE trades");
             })
             .then(function() {
                 done();

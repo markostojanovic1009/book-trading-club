@@ -8,7 +8,9 @@ body {
   color: #f9f9f9;
   margin: 5px;
   font-size: 1.5em;
-  padding: 0; }
+  padding: 0;
+  text-align: center;
+  width: 100%; }
 
 .menu a {
   color: #f9f9f9; }

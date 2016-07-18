@@ -1,4 +1,35 @@
-body {
-  background: url("../images/index_background.jpeg"); }
+/* Small only */
+/* Medium and up */
+/* Medium only */
+/* Large and up */
+/* Large only */
+@media screen and (min-width: 40em) {
+  body {
+    background: url("../images/index_background.jpeg") no-repeat; } }
+@media screen and (max-width: 39.9375em) {
+  body {
+    background: #f1ead7; } }
+
+.main-wrapper {
+  margin-top: 200px; }
+
+.intro-tile-wrapper {
+  margin-bottom: 100px;
+  text-align: center; }
+  .intro-tile-wrapper .intro-tile {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    color: #978046;
+    font-weight: bold;
+    font-size: 1.4em;
+    /* If we weren't using text-shadow, we'd set a fallback color
+       and use this to set color instead
+      -webkit-text-fill-color: white; */
+    text-shadow: 0.5px 0.5px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; }
+
+.intro-tile-header {
+  margin-bottom: 20px;
+  font-size: 1.8em; }
 
 /*# sourceMappingURL=index.css.map */

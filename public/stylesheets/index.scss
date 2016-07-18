@@ -1,3 +1,48 @@
+@import "__breakpoint";
 body {
-  background: url('../images/index_background.jpeg');
+  @include medium-up {
+    background: url('../images/index_background.jpeg') no-repeat;
+  }
+  @include small {
+    background: #f1ead7;
+  }
+}
+
+.main-wrapper {
+  margin-top: 200px;
+}
+
+.intro-tile-wrapper {
+  margin-bottom: 100px;
+
+  text-align: center;
+  .intro-tile {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    color: #978046;
+    font-weight: bold;
+    font-size: 1.4em;
+    //-webkit-text-stroke: 0.3px black;
+
+    /* If we weren't using text-shadow, we'd set a fallback color
+       and use this to set color instead
+      -webkit-text-fill-color: white; */
+
+
+    text-shadow:
+            0.5px 0.5px 0 #000,
+              /* Simulated effect for Firefox and Opera
+                 and nice enhancement for WebKit */
+            -1px -1px 0 #000,
+            1px -1px 0 #000,
+            -1px  1px 0 #000,
+            1px  1px 0 #000;
+  }
+}
+
+
+.intro-tile-header {
+  margin-bottom: 20px;
+  font-size: 1.8em;
 }

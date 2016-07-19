@@ -1,0 +1,44 @@
+@import '__breakpoint';
+
+body {
+  background: url('../images/texture.jpg') repeat;
+}
+
+.form-wrapper {
+  @include medium-up {
+    margin-top: 200px;
+  }
+
+  @include small {
+    margin-top: 100px;
+  }
+  text-align: center;
+}
+
+.form-header {
+  margin-bottom: 20px;
+  font-size: 1.5em;
+
+}
+form {
+  ::-moz-placeholder {
+    color: black;
+  }
+}
+
+.form-hint > a {
+  margin-left: 5px;
+}
+input[type="submit"] {
+  margin: 20px auto;
+  padding: 15px;
+  font-size: 1.4em;
+  font-weight: bold;
+  background-color: #66310E;
+  border: none;
+  border-radius: 20px;
+  color: #f9f9f9;
+  &:hover {
+    background-color: #8C4313;
+  }
+}

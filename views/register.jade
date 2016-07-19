@@ -1,0 +1,17 @@
+extends layout
+
+block pageCSS
+    link(rel="stylesheet", href="/stylesheets/register_login.css")
+
+block content
+    .row
+      .small-12.large-4.large-offset-4.column
+        .form-wrapper
+          .form-header Sign up to enjoy millions of books
+          form(action="/register", method="POST")
+            input(name="username", type="text", placeholder="Username")
+            input(name="password", type="password", placeholder="Password")
+            input(name="email", type="email", placeholder="Email address")
+            .form-hint Already have an account?
+              a(href="/login") Login now
+            input(type="submit", value="Sign up")

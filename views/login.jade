@@ -1,0 +1,16 @@
+extends layout
+
+block pageCSS
+    link(rel="stylesheet", href="/stylesheets/register_login.css")
+
+block content
+    .row
+        .small-12.large-4.large-offset-4.column
+            .form-wrapper
+                .form-header Login
+                form(action="/register", method="POST")
+                    input(name="username", type="text", placeholder="Username")
+                    input(name="password", type="password", placeholder="Password")
+                    .form-hint Don't have an account?
+                        a(href="/register") Sign up here
+                    input(type="submit", value="Login")

@@ -23,7 +23,7 @@ body {
     color: #978046;
     font-weight: bold;
     font-size: 1.4em;
-    //-webkit-text-stroke: 0.3px black;
+    -webkit-text-stroke: 0.2px black;
 
     /* If we weren't using text-shadow, we'd set a fallback color
        and use this to set color instead
@@ -31,7 +31,7 @@ body {
 
 
     text-shadow:
-            0.5px 0.5px 0 #000,
+            0.2px 0.2px 0 #000,
               /* Simulated effect for Firefox and Opera
                  and nice enhancement for WebKit */
             -1px -1px 0 #000,

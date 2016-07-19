@@ -1,0 +1,40 @@
+/* Small only */
+/* Medium and up */
+/* Medium only */
+/* Large and up */
+/* Large only */
+body {
+  background: url("../images/texture.jpg") repeat; }
+
+.form-wrapper {
+  text-align: center; }
+  @media screen and (min-width: 40em) {
+    .form-wrapper {
+      margin-top: 200px; } }
+  @media screen and (max-width: 39.9375em) {
+    .form-wrapper {
+      margin-top: 100px; } }
+
+.form-header {
+  margin-bottom: 20px;
+  font-size: 1.5em; }
+
+form ::-moz-placeholder {
+  color: black; }
+
+.form-hint > a {
+  margin-left: 5px; }
+
+input[type="submit"] {
+  margin: 20px auto;
+  padding: 15px;
+  font-size: 1.4em;
+  font-weight: bold;
+  background-color: #66310E;
+  border: none;
+  border-radius: 20px;
+  color: #f9f9f9; }
+  input[type="submit"]:hover {
+    background-color: #8C4313; }
+
+/*# sourceMappingURL=register_login.css.map */

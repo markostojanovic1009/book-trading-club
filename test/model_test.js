@@ -146,6 +146,23 @@ describe('ModelTest', function () {
 
         });
 
+        describe('verifyUser', function() {
+            it('should return an error when a nonexistent username is passed', function() {
+                return User.verifyUser('nonexistent', 'nopassword').should.be.rejected.and.eventually.have.property('message', '' +
+                    'Wrong username or password.');
+            });
+
+            it('should return an error when password is passed', function() {
+                return User.verifyUser(user.username, 'wrongpassword').should.be.rejected.and.eventually.have.property('message', '' +
+                    'Wrong username or password.');
+            });
+
+            it("should return a username when user is properly authenticated", function() {
+               return User.verifyUser(user.username, user.password).should.be.fulfilled.and.eventually.deep.equal({
+                   username: user.username });
+            });
+        });
+
     });
 
     describe('Book', function () {

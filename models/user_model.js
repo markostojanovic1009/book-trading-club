@@ -7,6 +7,7 @@ var db = require('./database');
  */
 const ACCOUNT_CREATION_ERROR_CODE = 1000;
 const USERNAME_NOT_FOUND_CODE = 4000;
+const ACCOUNT_AUTHENTICATION_ERROR_CODE = 4001;
 const EMAIL_EXISTS_CODE = 4005;
 const INTERNAL_DATABASE_ERROR_CODE = 5000;
 const SUCCESSFUL_OPERATION = 6000;
@@ -20,7 +21,7 @@ var usernameNotFoundError = function(wrongUsername) {
 
 var internalDatabaseError = function() {
     return {
-        code: USERNAME_NOT_FOUND_CODE,
+        code: INTERNAL_DATABASE_ERROR_CODE,
         message: "An error occured. Please try again later."
     };
 };
@@ -200,9 +201,43 @@ var getUserId = function(username) {
   });
 };
 
+/* Bcryptjs doesn't support Promises until version 2.4.0
+ * which isn't out yet. I'm doing it synchronously now. I'll update
+ * it to use Promises once 2.4.0 is out.
+ */
+var verifyUser = function(username, password) {
+    return new Promise(function(resolve, reject) {
+        db.oneOrNone("SELECT hash FROM users WHERE username=$1", [username])
+            .then(function(data) {
+                if(data) {
+                    if (bcrypt.compareSync(password, data.hash)) {
+                        resolve({
+                            username: username
+                        });
+                    } else {
+                        reject({
+                            code: ACCOUNT_AUTHENTICATION_ERROR_CODE,
+                            message: "Wrong username or password."
+                        });
+                    }
+                } else {
+                    reject({
+                        code: ACCOUNT_AUTHENTICATION_ERROR_CODE,
+                        message: "Wrong username or password."
+                    });
+                }
+            })
+            .catch(function(error) {
+                console.log(error);
+                reject(internalDatabaseError());
+            });
+    });
+};
+
 module.exports = {
     addUser : addUser,
     getUser: getUser,
     updateUser: updateUser,
-    getUserId: getUserId
+    getUserId: getUserId,
+    verifyUser: verifyUser
 };

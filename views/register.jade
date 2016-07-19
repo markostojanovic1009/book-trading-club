@@ -7,6 +7,9 @@ block content
     .row
       .small-12.large-4.large-offset-4.column
         .form-wrapper
+          if(message)
+            .callout.alert
+              p= message
           .form-header Sign up to enjoy millions of books
           form(action="/register", method="POST")
             input(name="username", type="text", placeholder="Username")

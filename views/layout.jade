@@ -17,14 +17,28 @@ html
 
       .top-bar-right
         ul.dropdown.menu(data-dropdown-menu)
-          li
-            a(href="#") All books
-          li
-            a(href="#") My books
-          li
-            a(href="#") My trades
-          li
-            a(href="#") Login
+          if(user)
+            li
+              a(href="#") All books
+            li
+              a(href="#") My books
+            li
+              a(href="#") My trades
+            li
+              a(href="#")= user.username
+              ul.menu
+               li
+                a(href="/user/" + user.username) Profile
+               li
+                a(href="/logout") Log out
+
+
+          else
+            li
+              a(href="/register") Sign up
+            li
+              a(href="/login") Login
+
 
     block content
 

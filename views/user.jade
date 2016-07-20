@@ -1,0 +1,35 @@
+extends layout
+
+block pageCSS
+    link(rel="stylesheet", href="/stylesheets/user.css")
+
+block content
+    .row
+      .small-12.large-4.large-offset-4.column
+
+          if(user)
+              .form-wrapper
+                if(userMessage)
+                  .user-message
+                      if(userMessage.code == 6000)
+                          .callout.success
+                              p= userMessage.message
+                      else
+                          .callout.alert
+                              p= userMessage.message
+                form(action="/user/" + user.username, method="POST")
+                    .form-group
+                        label(for="username") Username
+                        input(type='text', id="username", value=user.username readonly)
+                    .form-group
+                        label(for="email") Email
+                        input(type='email', id="email", name="email", value=user.email || "")
+                    .form-group
+                        label(for="city") City
+                        input(type="text", id="city", name="city", value=user.city || "")
+                    .form-group
+                        label(for="country") Country
+                        input(type="text", id="country", name="country", value=user.country || "")
+                    .update-info
+                      input(type="submit", value="Update info")
+

@@ -10,7 +10,7 @@ const USERNAME_NOT_FOUND_CODE = 4000;
 const ACCOUNT_AUTHENTICATION_ERROR_CODE = 4001;
 const EMAIL_EXISTS_CODE = 4005;
 const INTERNAL_DATABASE_ERROR_CODE = 5000;
-const SUCCESSFUL_OPERATION = 6000;
+const SUCCESSFUL_OPERATION_CODE = 6000;
 
 var usernameNotFoundError = function(wrongUsername) {
     return {
@@ -113,7 +113,7 @@ var addUser = function(username, password, email) {
     var hash = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 
     return new Promise(function (resolve, reject) {
-        db.one("INSERT INTO users(username, hash, email) VALUES($1, $2, $3) returning username, email", [username, hash, email])
+        db.one("INSERT INTO users(username, hash, email, city, country) VALUES($1, $2, $3, null, null) returning username", [username, hash, email])
             .then(function (data) {
                 resolve(data);
             })
@@ -143,7 +143,7 @@ var addUser = function(username, password, email) {
 
 var getUser = function(username) {
     return new Promise(function(resolve, reject) {
-        db.oneOrNone("SELECT username, email FROM users WHERE username=$1", [username])
+        db.oneOrNone("SELECT username, email, city, country FROM users WHERE username=$1", [username])
             .then(function(data) {
                 if(data) {
                     resolve(data);
@@ -160,9 +160,13 @@ var getUser = function(username) {
 
 var updateUser = function (user) {
     return new Promise(function(resolve, reject) {
+        var emailValidationError = verifyEmail(user.email);
+        if(emailValidationError)
+            return Promise.reject(emailValidationError);
         getUser(user.username)
             .then(function(data) {
-                return db.none("UPDATE users SET email=$2 WHERE username=$1", [user.username, user.email]);
+                return db.none("UPDATE users SET email=$2, city=$3, country=$4 WHERE username=$1",
+                    [user.username, user.email, user.city || null, user.country || null]);
             })
             .then(function() {
                 resolve();
@@ -239,5 +243,6 @@ module.exports = {
     getUser: getUser,
     updateUser: updateUser,
     getUserId: getUserId,
-    verifyUser: verifyUser
+    verifyUser: verifyUser,
+    SUCCESSFUL_OPERATION_CODE: SUCCESSFUL_OPERATION_CODE
 };

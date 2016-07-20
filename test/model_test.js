@@ -13,7 +13,9 @@ describe('ModelTest', function () {
         db.none("CREATE TABLE users(id SERIAL UNIQUE, " +
                 "username varchar(50) UNIQUE NOT NULL," +
                 "hash varchar(200) NOT NULL," +
-                "email varchar(200) UNIQUE NOT NULL)")
+                "email varchar(200) UNIQUE NOT NULL," +
+                "city varchar(100)," +
+                "country varchar(100))")
         .then(function () {
             done();
         }).catch(function (error) {
@@ -25,30 +27,28 @@ describe('ModelTest', function () {
         var bcrypt = require('bcryptjs');
         var User = require('../models/user_model');
         var user;
-        before(function () {
+        before(function(done) {
             user = {
                 username: 'username123',
                 password: 'password123',
                 email: 'foobar@gmail.com'
             };
+            db.none("INSERT INTO users(username, hash, email) VALUES($1, $2, $3)", [user.username,
+                    bcrypt.hashSync(user.password, bcrypt.genSaltSync(10)), user.email])
+                .then(function () {
+                    done();
+                })
+                .catch(function (error) {
+                    console.log('error');
+                });
         });
-
         describe('getUser', function () {
-            before(function (done) {
-                db.none("INSERT INTO users(username, hash, email) VALUES($1, $2, $3)", [user.username,
-                        bcrypt.hashSync(user.password, bcrypt.genSaltSync(10)), user.email])
-                    .then(function () {
-                        done();
-                    })
-                    .catch(function (error) {
-                        console.log('error');
-                    });
-            });
-
             it('should return a user when an existing username is passed', function () {
                 return User.getUser(user.username).should.eventually.deep.equal({
                     username: user.username,
-                    email: user.email
+                    email: user.email,
+                    country: user.country || null,
+                    city: user.city || null
                 });
             });
 
@@ -95,7 +95,7 @@ describe('ModelTest', function () {
 
             it("should insert a valid user into the database", function () {
                 return User.addUser(newUser.username, newUser.password, newUser.email).should.be.fulfilled.and.eventually.deep
-                    .equal({username: newUser.username, email: newUser.email});
+                    .equal({username: newUser.username});
             });
 
             it("should return an error when the user already exists", function () {

@@ -1,5 +1,6 @@
 body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background: url('../images/texture.jpg') repeat;
 }
 
 
@@ -16,6 +17,10 @@ body {
   width: 100%;
 }
 
+.dropdown.menu>li.is-dropdown-submenu-parent>a::after {
+  border-top-color: #8C4313;
+}
+
 .menu {
   a {
     color: #f9f9f9;
@@ -26,3 +31,4 @@ body {
     }
   }
 }
+

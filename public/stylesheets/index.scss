@@ -3,9 +3,6 @@ body {
   @include medium-up {
     background: url('../images/index_background.jpeg') no-repeat;
   }
-  @include small {
-    background: #f1ead7;
-  }
 }
 
 .main-wrapper {

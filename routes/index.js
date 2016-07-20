@@ -2,9 +2,16 @@ var express = require('express');
 var router = express.Router();
 var User = require('../models/user_model');
 
+var getUser = function(req) {
+    if(req.session.user) {
+        return req.session.user
+    } else {
+        return null;
+    }
+};
 
 router.get('/', function(req, res, next) {
-  res.render('index', {  });
+  res.render('index', {user: getUser(req)});
 });
 
 
@@ -18,6 +25,12 @@ router.get('/login', function(req, res, next) {
   res.render('login');
 });
 
+
+/* User registration.
+ * Calls User model to add the new user,
+ * redirects directly with user-friendly error message
+ * from the model.
+ */
 router.post('/register', function(req, res, next) {
   var username = req.body.username;
   var password = req.body.password;
@@ -33,6 +46,11 @@ router.post('/register', function(req, res, next) {
       });
 });
 
+
+/* Authentication route. Saves user { username } to req.session
+ * Redirects to back to /login with user-friendly error message if wrong
+ * info was passed.
+ */
 router.post('/login', function(req, res, next) {
   var username = req.body.username;
   var password = req.body.password;
@@ -44,6 +62,12 @@ router.post('/login', function(req, res, next) {
       .catch(function(error) {
         res.render('login', error);
       });
+});
+
+/* Simply deletes req.session.user */
+router.get('/logout', function(req, res, next) {
+   req.session.user = null;
+    res.redirect('/');
 });
 
 

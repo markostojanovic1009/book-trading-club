@@ -1,0 +1,23 @@
+.form-wrapper {
+  margin-top: 200px; }
+
+.form-group label, .form-group input {
+  display: inline-block;
+  vertical-align: middle; }
+
+.update-info {
+  text-align: center; }
+
+input[type="submit"] {
+  margin: 20px auto;
+  padding: 15px;
+  font-size: 1.4em;
+  font-weight: bold;
+  background-color: #66310E;
+  border: none;
+  border-radius: 20px;
+  color: #f9f9f9; }
+  input[type="submit"]:hover {
+    background-color: #8C4313; }
+
+/*# sourceMappingURL=user.css.map */

@@ -1,0 +1,93 @@
+/* Small only */
+/* Medium and up */
+/* Medium only */
+/* Large and up */
+/* Large only */
+.form-wrapper {
+  margin-top: 100px;
+  text-align: center; }
+
+input[type=submit] {
+  padding: 15px;
+  font-size: 1.4em;
+  font-weight: bold;
+  background-color: #66310E;
+  border: none;
+  border-radius: 20px;
+  color: #f9f9f9; }
+  input[type=submit]:hover {
+    background-color: #8C4313; }
+  input[type=submit]:disabled {
+    background-color: #5f5f5f; }
+
+.overlay {
+  width: 100%;
+  z-index: 1000;
+  position: absolute;
+  padding-left: 20%;
+  padding-right: 20%;
+  background: rgba(153, 161, 163, 0.5); }
+  @media screen and (max-width: 39.9375em) {
+    .overlay {
+      margin-top: 50px; } }
+
+#book-find, #title {
+  display: inline; }
+
+#book-find {
+  margin: 10px;
+  font-size: 1.2em;
+  font-weight: bold;
+  background-color: #66310E;
+  border: none;
+  border-radius: 10px;
+  color: #f9f9f9; }
+  @media screen and (min-width: 40em) {
+    #book-find {
+      padding: 10px 20px; } }
+  @media screen and (max-width: 39.9375em) {
+    #book-find {
+      padding: 5px; } }
+  #book-find:hover {
+    background-color: #8C4313; }
+
+#title {
+  width: 80%; }
+
+.cover-image {
+  border: 3px solid transparent; }
+  .cover-image:hover {
+    border: 3px solid #22bb5b;
+    cursor: pointer; }
+
+.cover-item {
+  list-style: none;
+  display: inline;
+  margin: 10px; }
+
+.main-wrapper {
+  margin-top: 100px; }
+
+.book-cover {
+  display: inline-block; }
+  .book-cover img {
+    width: 100px; }
+
+.row-margin {
+  margin-bottom: 20px; }
+
+.book-info {
+  display: inline-block;
+  width: 75%;
+  margin-left: 20px;
+  vertical-align: top;
+  text-align: center;
+  color: #978046; }
+  @media screen and (max-width: 39.9375em) {
+    .book-info {
+      width: 55%; } }
+
+.book-title {
+  font-style: italic; }
+
+/*# sourceMappingURL=user_books.css.map */

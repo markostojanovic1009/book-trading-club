@@ -15,9 +15,8 @@ var addBook = function(username, bookObject) {
     return new Promise(function(resolve, reject) {
         User.getUserId(username)
             .then(function(id) {
-                return db.none("INSERT INTO books(name, author, description, isbn, book_cover_url, borrowed_to, owner_id) VALUES" +
-                    "($2, $3, $4, $5, $6, null, $1)", [id, bookObject.name, bookObject.author, bookObject.description,
-                    bookObject.isbn, bookObject.book_cover_url]);
+                return db.none("INSERT INTO books(name, author, isbn, book_cover_url, borrowed_to, owner_id) VALUES" +
+                    "($2, $3, $4, $5, null, $1)", [id, bookObject.name, bookObject.author, bookObject.isbn, bookObject.book_cover_url]);
             })
             .then(function() {
                 resolve();
@@ -33,7 +32,7 @@ var getUserBooks = function(username) {
   return new Promise(function(resolve, reject) {
       User.getUserId(username)
           .then(function(id) {
-              return db.any("SELECT id, name, author, description, isbn, book_cover_url, borrowed_to FROM books WHERE owner_id=$1", [id]);
+              return db.any("SELECT id, name, author, isbn, book_cover_url, borrowed_to FROM books WHERE owner_id=$1", [id]);
           })
           .then(function(books) {
               resolve(books);
@@ -75,7 +74,7 @@ var getBookOwner = function(bookId) {
 
 var getBookById = function(bookId) {
     return new Promise(function(resolve, reject) {
-       db.one("SELECT name, author, description, isbn, book_cover_url, borrowed_to FROM books WHERE id=$1", [bookId])
+       db.one("SELECT name, author, isbn, book_cover_url, borrowed_to FROM books WHERE id=$1", [bookId])
            .then(function(book) {
                resolve(book);
            })

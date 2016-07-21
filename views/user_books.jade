@@ -1,0 +1,31 @@
+extends layout
+
+block pageCSS
+    link(rel="stylesheet", href="/stylesheets/user_books.css")
+
+block content
+    .row
+        .small-12.large-6.large-offset-3.column
+            .form-wrapper
+                form(action="/user/" + user.username + "/books", method="POST")
+                    input(type="text", name="title", id="title", placeholder="Book title")
+                    a(href="#", id="book-find") Find
+                    input(type="hidden", name="author", id="author")
+                    input(type="hidden", name="book_cover_url", id="book-cover-url")
+                    input(type="hidden", name="isbn", id="isbn")
+                    input(type="submit", value="Add book", disabled)
+    .overlay(hidden)
+    .main-wrapper
+        if(books)
+            each book in books
+                .row.row-margin
+                    .small-12.large-6.large-offset-3.column
+                        .book-cover
+                            img(src=book.book_cover_url)
+                        .book-info
+                            h3.book-title= book.name
+                            .book-author
+                                h5 by #{book.author}
+
+
+    script(src="/javascripts/book_lookup.js")

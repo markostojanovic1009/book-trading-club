@@ -1,0 +1,106 @@
+@import '__breakpoint';
+.form-wrapper {
+  margin-top: 100px;
+  text-align: center;
+}
+
+input[type=submit] {
+  padding: 15px;
+  font-size: 1.4em;
+  font-weight: bold;
+  background-color: #66310E;
+  border: none;
+  border-radius: 20px;
+  color: #f9f9f9;
+  &:hover {
+    background-color: #8C4313;
+  }
+  &:disabled {
+    background-color: #5f5f5f;
+  }
+}
+
+.overlay {
+  width: 100%;
+  z-index: 1000;
+  position: absolute;
+  padding-left: 20%;
+  padding-right: 20%;
+  @include small {
+    margin-top: 50px;
+  }
+  background: rgba(153, 161, 163, 0.5);
+
+}
+
+#book-find, #title {
+  display: inline;
+}
+
+#book-find {
+  margin: 10px;
+  @include medium-up {
+    padding: 10px 20px;
+  }
+  @include small {
+    padding: 5px;
+  }
+  font-size: 1.2em;
+  font-weight: bold;
+  background-color: #66310E;
+  border: none;
+  border-radius: 10px;
+  color: #f9f9f9;
+  &:hover {
+    background-color: #8C4313;
+  }
+}
+
+#title {
+  width: 80%;
+}
+
+.cover-image {
+  border: 3px solid transparent;
+  &:hover {
+    border: 3px solid #22bb5b;
+    cursor: pointer;
+  }
+}
+
+.cover-item {
+  list-style: none;
+  display: inline;
+  margin: 10px;
+}
+
+.main-wrapper {
+  margin-top: 100px;
+}
+
+.book-cover {
+  display: inline-block;
+  img {
+    width: 100px;
+  }
+}
+
+.row-margin {
+  margin-bottom: 20px;
+}
+
+.book-info {
+  display: inline-block;
+  width: 75%;
+  @include small {
+    width: 55%;
+  }
+  margin-left: 20px;
+  vertical-align: top;
+  text-align: center;
+  color: #978046;
+}
+
+.book-title {
+  font-style: italic;
+}

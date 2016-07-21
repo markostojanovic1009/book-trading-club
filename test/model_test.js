@@ -172,7 +172,6 @@ describe('ModelTest', function () {
         var firstBook = {
             name: "Introduction To Algorithms",
             author: 'Thomas H. Cormen',
-            description: 'Really good book that introduces people to fundamentals algorithms and data structures.',
             isbn: "978-0262033848",
             book_cover_url: "http://images.betterworldbooks.com/026/Introduction-to-Algorithms-Third-Edition-Cormen-Thomas-H-9780262533058.jpg"
         };
@@ -182,13 +181,11 @@ describe('ModelTest', function () {
                     "id SERIAL PRIMARY KEY," +
                     "name varchar(200) NOT NULL, " +
                     "author varchar(300)," +
-                    "description text," +
                     "isbn varchar(14)," +
                     "book_cover_url varchar(200)," +
                     "owner_id integer REFERENCES users(id)," +
                     "borrowed_to integer REFERENCES users(id))")
                 .then(function () {
-                    console.log("Created books");
                     done();
                 })
                 .catch(function (error) {
@@ -213,7 +210,6 @@ describe('ModelTest', function () {
                 var wrongBook = {
                     name: "Introduction To Algorithms",
                     author: "author".repeat(70),
-                    description: 'Really good book that introduces people to fundamentals algorithms and data structures.',
                     isbn: "978-0262033848",
                     book_cover_url: "http://images.betterworldbooks.com/026/Introduction-to-Algorithms-Third-Edition-Cormen-Thomas-H-9780262533058.jpg"
                 };
@@ -232,7 +228,6 @@ describe('ModelTest', function () {
                 return Book.getUserBooks(username).should.be.fulfilled.and.eventually.deep.equal([{
                     name: firstBook.name,
                     author: firstBook.author,
-                    description: firstBook.description,
                     isbn: firstBook.isbn,
                     book_cover_url: firstBook.book_cover_url,
                     id: 1,
@@ -282,7 +277,6 @@ describe('ModelTest', function () {
         var book1 = {
             name: "Harry Potter and the Prisoner of Azkaban",
             author: "J.K. Rowling",
-            description: "Third iteration of the Harry Potter saga. Sirius Black escaped the prison...",
             isbn: "0439136369",
             book_cover_url: "http://pics1.this-pic.com/key/harry%20potter%20and%20the%20prisoner%20of%20azkaban%20book%20cover"
         };

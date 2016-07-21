@@ -1,11 +1,9 @@
 var express = require('express');
 var router = express.Router();
 var User = require('../models/user_model');
-
-/* Leads to user profile which enables the user to change profile info such
- * as email, city or country.
- */
-
+var Books = require('../models/book_model');
+var request = require('request');
+var requestPromise = require('request-promise');
 
 /* User-friendly error handling middleware.
  * Uses req.session to transfer error between requests
@@ -19,6 +17,10 @@ router.use(function(req, res, next) {
     }
     next();
 });
+
+/* Leads to user profile which enables the user to change profile info such
+ * as email, city or country.
+ */
 router.get('/:username', function(req, res, next) {
     var username = req.params.username;
     if(req.session.user && req.session.user.username == username) {
@@ -65,5 +67,46 @@ router.post('/:username', function(req, res, next) {
         });
 });
 
+
+router.get('/:username/books', function(req, res, next) {
+   var username = req.params.username;
+    if(!req.session.user)
+       return res.redirect('/login');
+    Books.getUserBooks(username)
+        .then(function(booksArray) {
+            console.log(booksArray);
+            res.render('user_books', {
+                user: req.session.user,
+                books: booksArray
+            });
+        })
+        .catch(function(error) {
+           console.log(error);
+            res.render('user_books', {
+                user: req.session.user,
+                error: error
+            });
+        });
+});
+
+router.post('/:username/books', function(req, res, next) {
+   if(!req.session.user)
+       res.redirect('/login');
+    var username = req.session.user.username;
+    Books.addBook(username, {
+        name: req.body.title,
+        author: req.body.author,
+        book_cover_url: req.body.book_cover_url,
+        isbn: req.body.isbn
+        })
+        .then(function() {
+            res.redirect('/user/' + username + '/books');
+        })
+        .catch(function(error) {
+            console.log(error);
+            req.session.userMessage = error;
+            res.redirect('/user/' + username + '/books');
+        });
+});
 
 module.exports = router;

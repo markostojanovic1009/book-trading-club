@@ -120,15 +120,18 @@ router.get('/:username/trades', function(req, res, next) {
     var username = req.params.username;
     if(!loggedIn(req, username))
         return res.redirect('/login');
+    var tradesForUser = [], tradesFromUser = [];
     Trades.getUserTrades(username)
         .then(function(userTrades) {
-            var tradesForUser = userTrades.filter(function(trade) {
+            tradesForUser = userTrades.filter(function(trade) {
                 return trade.request_to == req.session.user.id && trade.trade_accepted === null;
             });
-
-            var tradesFromUser = userTrades.filter(function(trade) {
+            tradesFromUser = userTrades.filter(function(trade) {
                return trade.request_by == req.session.user.id;
             });
+            return Trades.deleteDeclinedTrades(req.session.user.id);
+        })
+        .then(function(){
             res.render('trades', {
                 user: req.session.user,
                 tradesForUser: tradesForUser,
@@ -172,7 +175,6 @@ router.post('/:username/trades', function(req, res, next) {
                     code: 6000,
                     message: "You've borrowed your" + bookName + " to another user!"
                 };
-                console.log("Accepted trade");
                 res.redirect('/user/' + username + '/trades');
             })
             .catch(function(error) {
@@ -190,7 +192,10 @@ router.post('/:username/trades/new', function(req, res, next) {
         res.redirect('/');
     Trades.requestBook(username, req.body.book_id)
         .then(function() {
-            req.session.userMessage.message = "Trade added!";
+            req.session.userMessage = {
+                code: 6000,
+                message: "Your trade request has been sent!"
+            };
             res.redirect('/user/' + username + '/trades');
         })
         .catch(function(error) {

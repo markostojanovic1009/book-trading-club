@@ -109,9 +109,22 @@ var getUserTrades = function(username) {
     });
 };
 
+var deleteDeclinedTrades = function(userId) {
+    return new Promise(function(resolve, reject) {
+       db.none("DELETE FROM trades WHERE request_by=$1 AND trade_accepted=false", [userId])
+           .then(function() {
+               resolve();
+           })
+           .catch(function(error) {
+               reject(error);
+           });
+    });
+};
+
 module.exports = {
     requestBook: requestBook,
     acceptTrade: acceptTrade,
     getUserTrades: getUserTrades,
-    declineTrade: declineTrade
+    declineTrade: declineTrade,
+    deleteDeclinedTrades: deleteDeclinedTrades
 };

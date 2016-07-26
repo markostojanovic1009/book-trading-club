@@ -29,8 +29,18 @@ input[type=submit] {
   @include small {
     margin-top: 50px;
   }
-  background: rgba(153, 161, 163, 0.5);
+  @include medium-up {
+    margin-top: -200px;
+  }
+  background: rgba(76, 86, 89, 0.9);
 
+}
+
+.overlay-header {
+  margin-bottom: 50px;
+  font-size: 1.8em;
+  color: #f9f9f9;
+  text-align: center;
 }
 
 #book-find, #title {
@@ -59,6 +69,11 @@ input[type=submit] {
 #title {
   width: 80%;
 }
+.cover-item {
+  list-style: none;
+  display: inline-block;
+  margin: 10px 10px 30px;
+}
 
 .cover-image {
   border: 3px solid transparent;
@@ -68,10 +83,14 @@ input[type=submit] {
   }
 }
 
-.cover-item {
-  list-style: none;
-  display: inline;
-  margin: 10px;
+.cover-info {
+  font-size: 1.2em;
+  color: #f9f9f9;
+  text-align: center;
+}
+
+.cover-title {
+  font-style: italic;
 }
 
 .main-wrapper {

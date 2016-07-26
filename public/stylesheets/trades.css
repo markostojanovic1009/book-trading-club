@@ -8,6 +8,9 @@
   margin-top: 100px;
   margin-bottom: 40px; }
 
+.book-wrapper {
+  margin-bottom: 30px; }
+
 .book-cover {
   display: inline-block; }
   .book-cover img {

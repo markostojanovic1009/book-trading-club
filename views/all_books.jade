@@ -13,11 +13,13 @@ mixin display_book_info(book)
                     h5 by #{book.author}
                 .form-wrapper
                     if(user)
-                        if(book.owner_id != user.id)
+                        if(book.owner_id != user.id && !book.trade_requested)
                             form(action="/user/" + user.username + "/trades/new", method="POST")
                                 input(type="hidden", name="book_id", value=book.id)
                                 input(type="hidden", name="username", value=user.username)
                                 input(type="submit", id="trade-button", value="Trade")
+                        else if(book.trade_requested)
+                            p.owned-book Trade requested for this book
                         else
                             p.owned-book This is your book
                     else

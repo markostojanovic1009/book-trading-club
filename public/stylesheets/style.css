@@ -12,6 +12,11 @@ body {
   padding: 0;
   text-align: center;
   width: 100%; }
+  .top-bar-title a {
+    color: #f9f9f9; }
+    .top-bar-title a:hover {
+      color: #f9f9f9;
+      text-decoration: none; }
 
 .dropdown.menu > li.is-dropdown-submenu-parent > a::after {
   border-top-color: #8C4313; }

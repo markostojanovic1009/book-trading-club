@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var User = require('../models/user_model');
 var Book = require('../models/book_model');
+var Trade = require('../models/trade_model');
 
 var getUser = function(req) {
     if(req.session.user) {
@@ -73,12 +74,32 @@ router.get('/logout', function(req, res, next) {
 
 
 router.get('/books', function(req, res, next) {
+    var allBooks = [];
+    var user = getUser(req);
     Book.getAllBooks()
         .then(function(data) {
-            res.render('all_books', {
-                user: getUser(req),
-                books: data
-            });
+            allBooks = data;
+            if(user) {
+                return Trade.getUserTrades(user.username);
+            } else {
+                res.render('all_books', {
+                    user: user,
+                    books: data
+                });
+            }
+        })
+        .then(function(userTrades) {
+           userTrades.forEach(function(trade) {
+               for(var i = 0; i < allBooks.length; i++) {
+                   if(allBooks[i].id == trade.id && trade.request_by == user.id && trade.trade_accepted === null) {
+                       allBooks[i].trade_requested = true;
+                   }
+               }
+           });
+           res.render('all_books', {
+               user: user,
+               books: allBooks
+           })
         })
         .catch(function(error) {
             res.render('all_books', {

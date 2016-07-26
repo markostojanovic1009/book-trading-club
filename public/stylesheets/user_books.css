@@ -26,10 +26,19 @@ input[type=submit] {
   position: absolute;
   padding-left: 20%;
   padding-right: 20%;
-  background: rgba(153, 161, 163, 0.5); }
+  background: rgba(76, 86, 89, 0.9); }
   @media screen and (max-width: 39.9375em) {
     .overlay {
       margin-top: 50px; } }
+  @media screen and (min-width: 40em) {
+    .overlay {
+      margin-top: -200px; } }
+
+.overlay-header {
+  margin-bottom: 50px;
+  font-size: 1.8em;
+  color: #f9f9f9;
+  text-align: center; }
 
 #book-find, #title {
   display: inline; }
@@ -54,16 +63,24 @@ input[type=submit] {
 #title {
   width: 80%; }
 
+.cover-item {
+  list-style: none;
+  display: inline-block;
+  margin: 10px 10px 30px; }
+
 .cover-image {
   border: 3px solid transparent; }
   .cover-image:hover {
     border: 3px solid #22bb5b;
     cursor: pointer; }
 
-.cover-item {
-  list-style: none;
-  display: inline;
-  margin: 10px; }
+.cover-info {
+  font-size: 1.2em;
+  color: #f9f9f9;
+  text-align: center; }
+
+.cover-title {
+  font-style: italic; }
 
 .main-wrapper {
   margin-top: 100px; }

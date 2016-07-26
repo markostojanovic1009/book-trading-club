@@ -1,0 +1,38 @@
+extends layout
+
+block pageCSS
+    link(rel="stylesheet", href="/stylesheets/trades.css")
+
+block content
+    .row
+        .small-12.medium-6.column
+            h3.header Your trade requests
+            each trade in tradesFromUser
+              .book-wrapper
+                  .book-cover
+                    img(src=trade.book_cover_url)
+                  .book-info
+                      h3.book-title= trade.name
+                      .book-author
+                          h5 by #{trade.author}
+                      if(trade.trade_accepted)
+                        p.result.accepted Trade was accepted
+                      else if (trade.trade_accepted === false)
+                        p.result.declined Trade was declined
+                      else
+                        p.result.pending Pending request
+        .small-12.medium-6.column
+            h3.header Trade requests for you
+            each trade in tradesForUser
+                .book-wrapper
+                    .book-cover
+                        img(src=trade.book_cover_url)
+                    .book-info
+                        h3.book-title= trade.name
+                        .book-author
+                            h5 by #{trade.author}
+                        form.trade-choice(action="/user/" + user.username + "/trades", method="POST")
+                            input(type="hidden", name="book_id", value=trade.id)
+                            input(type="submit", id="trade-accept", name="trade_decision", value="Accept")
+                            input(type="submit", id="trade-decline", name="trade_decision", value="Decline")
+

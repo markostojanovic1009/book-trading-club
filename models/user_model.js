@@ -211,12 +211,13 @@ var getUserId = function(username) {
  */
 var verifyUser = function(username, password) {
     return new Promise(function(resolve, reject) {
-        db.oneOrNone("SELECT hash FROM users WHERE username=$1", [username])
+        db.oneOrNone("SELECT id, hash FROM users WHERE username=$1", [username])
             .then(function(data) {
                 if(data) {
                     if (bcrypt.compareSync(password, data.hash)) {
                         resolve({
-                            username: username
+                            username: username,
+                            id: data.id
                         });
                     } else {
                         reject({

@@ -2,13 +2,16 @@ var db = require('./database');
 var User = require('./user_model');
 
 var getAllBooks = function() {
-    db.any("SELECT name, author, description, isbn, book_cover_url FROM books")
-        .then(function(data) {
-            console.log(data);
-        })
-        .catch(function(error) {
-            console.log(error);
-        });
+    return new Promise(function(resolve, reject) {
+        db.any("SELECT id, name, author, isbn, book_cover_url, owner_id FROM books WHERE borrowed_to IS NULL")
+            .then(function (data) {
+                resolve(data);
+            })
+            .catch(function (error) {
+                console.log(error);
+                reject(error);
+            });
+    });
 };
 
 var addBook = function(username, bookObject) {
@@ -72,11 +75,18 @@ var getBookOwner = function(bookId) {
     });
 };
 
-var getBookById = function(bookId) {
+var getBooksById = function(bookIds) {
+    if(bookIds.length == 0)
+        return Promise.resolve([]);
+    var idStringArray;
+    if(Object.prototype.toString.call( bookIds ) === Object.prototype.toString.call( [] ))
+        idStringArray = bookIds.join(', ');
+    else
+        return Promise.resolve([]);
     return new Promise(function(resolve, reject) {
-       db.one("SELECT name, author, isbn, book_cover_url, borrowed_to FROM books WHERE id=$1", [bookId])
-           .then(function(book) {
-               resolve(book);
+       db.any("SELECT name, author, isbn, book_cover_url, borrowed_to FROM books WHERE id IN (" + idStringArray + ")")
+           .then(function(books) {
+               resolve(books);
            })
            .catch(function(error) {
                console.log(error);
@@ -91,5 +101,5 @@ module.exports = {
     getUserBooks: getUserBooks,
     getUserBooksIds: getUserBooksIds,
     getBookOwner: getBookOwner,
-    getBookById: getBookById
+    getBooksById: getBooksById
 };

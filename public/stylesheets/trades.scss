@@ -1,0 +1,74 @@
+@import '__breakpoint';
+
+.header {
+  text-align: center;
+  margin-top: 100px;
+  margin-bottom: 40px;
+}
+
+
+.book-cover {
+  display: inline-block;
+  img {
+    width: 100px;
+  }
+}
+
+.book-info {
+  display: inline-block;
+  width: 75%;
+  @include small {
+    width: 55%;
+  }
+  margin-left: 20px;
+  vertical-align: top;
+  text-align: center;
+  color: #978046;
+}
+
+.book-title {
+  font-style: italic;
+}
+
+.result {
+  font-size: 1.3em;
+  color: #2C2C2C;
+  width: 50%;
+  @include small {
+    width: 100%;
+  }
+  margin: 0 auto;
+}
+
+.pending {
+  background-color: #D27800;
+}
+
+.accepted {
+  background-color: #22bb5b;
+}
+
+.declined {
+  background-color: #b94a48;
+}
+
+.trade-choice {
+  text-align: center;
+}
+
+#trade-accept, #trade-decline {
+  color: #f9f9f9;
+  border: none;
+  font-size: 1.2em;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+#trade-accept {
+  background-color: #429E5B;
+  margin-right: 10px;
+}
+
+#trade-decline {
+  background-color: #C74A50;
+}

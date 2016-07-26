@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var User = require('../models/user_model');
+var Book = require('../models/book_model');
 
 var getUser = function(req) {
     if(req.session.user) {
@@ -70,5 +71,21 @@ router.get('/logout', function(req, res, next) {
     res.redirect('/');
 });
 
+
+router.get('/books', function(req, res, next) {
+    Book.getAllBooks()
+        .then(function(data) {
+            res.render('all_books', {
+                user: getUser(req),
+                books: data
+            });
+        })
+        .catch(function(error) {
+            res.render('all_books', {
+                user: getUser(req),
+                error: error
+            });
+        });
+});
 
 module.exports = router;

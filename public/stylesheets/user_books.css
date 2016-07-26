@@ -90,4 +90,7 @@ input[type=submit] {
 .book-title {
   font-style: italic; }
 
+.borrowed {
+  color: darkred; }
+
 /*# sourceMappingURL=user_books.css.map */

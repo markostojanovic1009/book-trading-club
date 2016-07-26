@@ -1,0 +1,32 @@
+extends layout
+
+block pageCSS
+    link(rel="stylesheet", href="/stylesheets/all_books.css")
+mixin display_book_info(book)
+    .small-12.medium-6.column
+        .book-wrapper
+            .book-cover
+                img(src=book.book_cover_url)
+            .book-info
+                h3.book-title= book.name
+                .book-author
+                    h5 by #{book.author}
+                .form-wrapper
+                    if(user)
+                        if(book.owner_id != user.id)
+                            form(action="/user/" + user.username + "/trades/new", method="POST")
+                                input(type="hidden", name="book_id", value=book.id)
+                                input(type="hidden", name="username", value=user.username)
+                                input(type="submit", id="trade-button", value="Trade")
+                        else
+                            p.owned-book This is your book
+                    else
+                        a.fake-trade-button(href="/login") Trade
+                            img(src="/images/trade_icon.png")
+block content
+    .main-wrapper
+        -for(var i = 0; i < books.length; i += 2)
+            .row
+                +display_book_info(books[i])
+                if(i + 1 < books.length)
+                    +display_book_info(books[i+1])

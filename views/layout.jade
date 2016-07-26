@@ -18,13 +18,13 @@ html
 
       .top-bar-right
         ul.dropdown.menu(data-dropdown-menu)
+          li
+            a(href="/books") All books
           if(user)
-            li
-              a(href="#") All books
             li
               a(href="/user/" + user.username + "/books") My books
             li
-              a(href="#") My trades
+              a(href="/user/" + user.username + "/trades") My trades
             li
               a(href="#")= user.username
               ul.menu
@@ -32,8 +32,6 @@ html
                 a(href="/user/" + user.username) Profile
                li
                 a(href="/logout") Log out
-
-
           else
             li
               a(href="/register") Sign up

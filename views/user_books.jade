@@ -26,6 +26,8 @@ block content
                             h3.book-title= book.name
                             .book-author
                                 h5 by #{book.author}
+                            if(book.borrowed_to)
+                                p.borrowed You lent this book
 
 
     script(src="/javascripts/book_lookup.js")

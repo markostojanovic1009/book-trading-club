@@ -1,0 +1,59 @@
+/* Small only */
+/* Medium and up */
+/* Medium only */
+/* Large and up */
+/* Large only */
+.main-wrapper {
+  margin-top: 100px; }
+
+.book-cover {
+  display: inline-block; }
+  .book-cover img {
+    width: 100px; }
+
+.book-info {
+  display: inline-block;
+  width: 75%;
+  margin-left: 20px;
+  vertical-align: top;
+  text-align: center;
+  color: #978046; }
+  @media screen and (max-width: 39.9375em) {
+    .book-info {
+      width: 55%; } }
+
+.book-title {
+  font-style: italic; }
+
+.book-wrapper {
+  margin-bottom: 20px; }
+
+.fake-trade-button {
+  font-size: 1.2em;
+  color: #f9f9f9;
+  background: #66310E;
+  padding: 10px;
+  border-radius: 15px;
+  width: 100px; }
+  .fake-trade-button:hover {
+    text-decoration: none;
+    color: #f9f9f9;
+    background: #8C4313; }
+  .fake-trade-button img {
+    margin-left: 5px; }
+
+input#trade-button {
+  text-align: left;
+  padding-left: 15px;
+  font-size: 1.2em;
+  background: url("../images/trade_icon.png") #66310E no-repeat;
+  background-position: 85% 50%;
+  border: none;
+  color: #f9f9f9;
+  border-radius: 15px;
+  width: 100px;
+  height: 40px; }
+  input#trade-button:hover {
+    background-color: #8C4313; }
+
+/*# sourceMappingURL=all_books.css.map */

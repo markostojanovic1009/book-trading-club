@@ -2,8 +2,12 @@ var express = require('express');
 var router = express.Router();
 var User = require('../models/user_model');
 var Books = require('../models/book_model');
-var request = require('request');
-var requestPromise = require('request-promise');
+var Trades = require('../models/trade_model');
+
+
+var loggedIn = function(req, username) {
+    return req.session.user && req.session.user.username == username;
+};
 
 /* User-friendly error handling middleware.
  * Uses req.session to transfer error between requests
@@ -23,7 +27,7 @@ router.use(function(req, res, next) {
  */
 router.get('/:username', function(req, res, next) {
     var username = req.params.username;
-    if(req.session.user && req.session.user.username == username) {
+    if(loggedIn(req, username)) {
         User.getUser(username)
             .then(function(data) {
                 res.render('user', {
@@ -43,6 +47,9 @@ router.get('/:username', function(req, res, next) {
 
 router.post('/:username', function(req, res, next) {
     var username = req.params.username;
+    if(!loggedIn(req, username))
+        return;
+
     var email = req.body.email;
     var city = req.body.city;
     if(city == '')
@@ -70,14 +77,14 @@ router.post('/:username', function(req, res, next) {
 
 router.get('/:username/books', function(req, res, next) {
    var username = req.params.username;
-    if(!req.session.user)
+    if(!loggedIn(req, username))
        return res.redirect('/login');
     Books.getUserBooks(username)
         .then(function(booksArray) {
-            console.log(booksArray);
             res.render('user_books', {
                 user: req.session.user,
-                books: booksArray
+                books: booksArray,
+                error: res.locals.userMessage
             });
         })
         .catch(function(error) {
@@ -90,9 +97,9 @@ router.get('/:username/books', function(req, res, next) {
 });
 
 router.post('/:username/books', function(req, res, next) {
-   if(!req.session.user)
-       res.redirect('/login');
     var username = req.session.user.username;
+    if(!loggedIn(req, username))
+        return res.redirect('/login');
     Books.addBook(username, {
         name: req.body.title,
         author: req.body.author,
@@ -106,6 +113,89 @@ router.post('/:username/books', function(req, res, next) {
             console.log(error);
             req.session.userMessage = error;
             res.redirect('/user/' + username + '/books');
+        });
+});
+
+router.get('/:username/trades', function(req, res, next) {
+    var username = req.params.username;
+    if(!loggedIn(req, username))
+        return res.redirect('/login');
+    Trades.getUserTrades(username)
+        .then(function(userTrades) {
+            var tradesForUser = userTrades.filter(function(trade) {
+                return trade.request_to == req.session.user.id && trade.trade_accepted === null;
+            });
+
+            var tradesFromUser = userTrades.filter(function(trade) {
+               return trade.request_by == req.session.user.id;
+            });
+            res.render('trades', {
+                user: req.session.user,
+                tradesForUser: tradesForUser,
+                tradesFromUser: tradesFromUser,
+                userMessage: res.locals.userMessage
+            });
+        })
+        .catch(function(error) {
+            res.render('trades', {
+                user: req.session.user,
+                userMessage: error
+            });
+        });
+});
+
+router.post('/:username/trades', function(req, res, next) {
+    var username = req.params.username;
+    if(!loggedIn(req, username))
+        return res.redirect('/login');
+    var tradeResult = req.body.trade_decision;
+    var bookId = req.body.book_id;
+    if(tradeResult == "Accept") {
+        Trades.acceptTrade(username, bookId)
+            .then(function(bookName) {
+                req.session.userMessage = {
+                    code: 6000,
+                    message: "You've borrowed your" + bookName + " to another user!"
+                };
+                console.log("Accepted trade");
+                res.redirect('/user/' + username + '/trades');
+            })
+            .catch(function(error) {
+               console.log(error);
+                req.session.userMessage = error;
+                res.redirect('/user/' + username + '/trades');
+            });
+    } else if(tradeResult == "Decline") {
+        Trades.declineTrade(username, bookId)
+            .then(function(bookName) {
+                req.session.userMessage = {
+                    code: 6000,
+                    message: "You've borrowed your" + bookName + " to another user!"
+                };
+                console.log("Accepted trade");
+                res.redirect('/user/' + username + '/trades');
+            })
+            .catch(function(error) {
+                console.log(error);
+                req.session.userMessage = error;
+                res.redirect('/user/' + username + '/trades');
+            });
+    } else {
+        res.redirect('/');
+    }
+});
+router.post('/:username/trades/new', function(req, res, next) {
+    var username = req.params.username;
+    if(!loggedIn(req, username))
+        res.redirect('/');
+    Trades.requestBook(username, req.body.book_id)
+        .then(function() {
+            req.session.userMessage.message = "Trade added!";
+            res.redirect('/user/' + username + '/trades');
+        })
+        .catch(function(error) {
+           req.session.userMessage = error;
+            res.redirect('/user/' + username + '/trades');
         });
 });
 

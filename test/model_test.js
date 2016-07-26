@@ -157,9 +157,11 @@ describe('ModelTest', function () {
                     'Wrong username or password.');
             });
 
-            it("should return a username when user is properly authenticated", function() {
+            it("should return a user when user is properly authenticated", function() {
                return User.verifyUser(user.username, user.password).should.be.fulfilled.and.eventually.deep.equal({
-                   username: user.username });
+                   id: 1,
+                   username: user.username
+               });
             });
         });
 
@@ -301,7 +303,6 @@ describe('ModelTest', function () {
                "request_by integer REFERENCES users(id)," +
                "requested_book integer REFERENCES books(id)," +
                "request_to integer REFERENCES users(id)," +
-               "accepted_book integer REFERENCES books(id)," +
                "trade_accepted boolean," +
                "trade_start date," +
                "trade_end date)")
@@ -346,18 +347,40 @@ describe('ModelTest', function () {
                 var currentDate = new Date();
                 var tradeEndDate = new Date(parseInt(currentDate.getFullYear() + 1) + "-"
                     + currentDate.getMonth() + "-" + currentDate.getDate());
-               return Trade.acceptTrade(user2.username, book2Id, null, tradeEndDate).should.be.fulfilled;
+               return Trade.acceptTrade(user2.username, book2Id, tradeEndDate).should.be.fulfilled;
             });
 
             it('should properly update table books to reflect the  successful trade', function() {
-                return Book.getBookById(book2Id).should.eventually.have.property('borrowed_to', user1Id);
+                return Book.getBooksById([book2Id]).should.eventually.deep.equal([{
+                    name: "Hitchhiker's Guide to the Galaxy",
+                    author: "Douglas Adams",
+                    isbn: "0345391802",
+                    book_cover_url: "https://2.bp.blogspot.com/-ED0m4tnNFUM/UP80yHRExFI/AAAAAAAACxM/I2yCxLiGcXY/s320/adams.hitchfive.cov.gif",
+                    borrowed_to: user1Id
+                }]);
             });
 
             it('should return an error when trying to trade a book that isnt in your possession', function() {
-                return Trade.acceptTrade(user2.username, book2Id, null, null).should.be.rejected.and.eventually.
+                return Trade.acceptTrade(user2.username, book2Id, null).should.be.rejected.and.eventually.
                     have.property('message', "You have already borrowed this book.");
             })
         });
+
+        describe('getUserTrades', function() {
+            it('should return an array of trades sent to and from user', function() {
+
+               return Trade.getUserTrades(user2.username).should.be.fulfilled.and.eventually.deep.equal([
+                   {
+                       "author": "Douglas Adams",
+                       "book_cover_url": "https://2.bp.blogspot.com/-ED0m4tnNFUM/UP80yHRExFI/AAAAAAAACxM/I2yCxLiGcXY/s320/adams.hitchfive.cov.gif",
+                       "id": 3,
+                       "name": "Hitchhiker's Guide to the Galaxy",
+                       "request_by": 5,
+                       "request_to": 6,
+                       trade_accepted: true
+                   }]);
+            });
+        })
         
         
     });

@@ -4,7 +4,7 @@ var Book = require('./book_model');
 var requestBook = function(userId, bookId) {
     var requestTo;
     return new Promise(function(resolve, reject) {
-        return Book.getBookOwner(bookId)
+        Book.getBookOwner(bookId)
            .then(function(requestToId) {
                requestTo = requestToId;
                if(requestTo == userId) {

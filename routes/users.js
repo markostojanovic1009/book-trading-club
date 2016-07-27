@@ -195,6 +195,7 @@ router.post('/:username/trades/new', function(req, res) {
             res.redirect('/user/' + username + '/trades');
         })
         .catch(function(error) {
+            console.log(error);
            req.session.userMessage = error;
             res.redirect('/user/' + username + '/trades');
         });

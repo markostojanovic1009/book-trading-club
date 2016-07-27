@@ -113,4 +113,9 @@ input[type=submit] {
 .borrowed {
   color: darkred; }
 
+#search-credits {
+  margin-top: 20px; }
+  #search-credits a {
+    margin-left: 5px; }
+
 /*# sourceMappingURL=user_books.css.map */

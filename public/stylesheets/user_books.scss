@@ -98,8 +98,13 @@ input[type=submit] {
   margin-top: 100px;
 }
 
-
-
 .borrowed {
   color: darkred;
+}
+
+#search-credits {
+  margin-top: 20px;
+  a {
+    margin-left: 5px;
+  }
 }

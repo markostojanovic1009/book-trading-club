@@ -3,6 +3,31 @@
 /* Medium only */
 /* Large and up */
 /* Large only */
+.book-wrapper {
+  margin-bottom: 30px; }
+
+.book-cover {
+  display: inline-block; }
+  .book-cover img {
+    width: 100px; }
+
+.row-margin {
+  margin-bottom: 20px; }
+
+.book-info {
+  display: inline-block;
+  width: 75%;
+  margin-left: 20px;
+  vertical-align: top;
+  text-align: center;
+  color: #978046; }
+  @media screen and (max-width: 39.9375em) {
+    .book-info {
+      width: 55%; } }
+
+.book-title {
+  font-style: italic; }
+
 .form-wrapper {
   margin-top: 100px;
   text-align: center; }
@@ -84,28 +109,6 @@ input[type=submit] {
 
 .main-wrapper {
   margin-top: 100px; }
-
-.book-cover {
-  display: inline-block; }
-  .book-cover img {
-    width: 100px; }
-
-.row-margin {
-  margin-bottom: 20px; }
-
-.book-info {
-  display: inline-block;
-  width: 75%;
-  margin-left: 20px;
-  vertical-align: top;
-  text-align: center;
-  color: #978046; }
-  @media screen and (max-width: 39.9375em) {
-    .book-info {
-      width: 55%; } }
-
-.book-title {
-  font-style: italic; }
 
 .borrowed {
   color: darkred; }

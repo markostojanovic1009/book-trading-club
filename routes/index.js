@@ -12,18 +12,37 @@ var getUser = function(req) {
     }
 };
 
-router.get('/', function(req, res, next) {
-  res.render('index', {user: getUser(req)});
+
+/* Home page. If the user isn't logged in
+ * it displays an introduction text, if he is
+ * it displays 2 random books and offers him to look more
+ */
+router.get('/', function(req, res) {
+    var user = getUser(req);
+    if(!user) {
+        res.render('index');
+    } else {
+        Book.getRandomBooks(2)
+            .then(function (books) {
+                res.render('index', {
+                    user: user,
+                    randomBooks: books
+                });
+            })
+            .catch(function () {
+                res.render('index', {user: user});
+            });
+    }
 });
 
 
 /* User sign-up page */
-router.get('/register', function(req, res, next) {
+router.get('/register', function(req, res) {
   res.render('register');
 });
 
 /* User login page */
-router.get('/login', function(req, res, next) {
+router.get('/login', function(req, res) {
   res.render('login');
 });
 
@@ -33,7 +52,7 @@ router.get('/login', function(req, res, next) {
  * redirects directly with user-friendly error message
  * from the model.
  */
-router.post('/register', function(req, res, next) {
+router.post('/register', function(req, res) {
   var username = req.body.username;
   var password = req.body.password;
   var email = req.body.email;
@@ -53,7 +72,7 @@ router.post('/register', function(req, res, next) {
  * Redirects to back to /login with user-friendly error message if wrong
  * info was passed.
  */
-router.post('/login', function(req, res, next) {
+router.post('/login', function(req, res) {
   var username = req.body.username;
   var password = req.body.password;
   User.verifyUser(username, password)
@@ -67,20 +86,25 @@ router.post('/login', function(req, res, next) {
 });
 
 /* Simply deletes req.session.user */
-router.get('/logout', function(req, res, next) {
+router.get('/logout', function(req, res) {
    req.session.user = null;
     res.redirect('/');
 });
 
 
-router.get('/books', function(req, res, next) {
+/* Lists all the books from the database.
+ * If the user isn't logged in it displays all books
+ * with the option to trade. If not, it calls Trade model
+ * to see whether the user already requested that book.
+ */
+router.get('/books', function(req, res) {
     var allBooks = [];
     var user = getUser(req);
     Book.getAllBooks()
         .then(function(data) {
             allBooks = data;
             if(user) {
-                return Trade.getUserTrades(user.username);
+                return Trade.getUserTrades(user.id);
             } else {
                 res.render('all_books', {
                     user: user,

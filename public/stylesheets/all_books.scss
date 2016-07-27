@@ -1,33 +1,8 @@
 @import '__breakpoint';
+@import '__book_template';
 
 .main-wrapper {
   margin-top: 100px;
-}
-.book-cover {
-  display: inline-block;
-  img {
-    width: 100px;
-  }
-}
-
-.book-info {
-  display: inline-block;
-  width: 75%;
-  @include small {
-    width: 55%;
-  }
-  margin-left: 20px;
-  vertical-align: top;
-  text-align: center;
-  color: #978046;
-}
-
-.book-title {
-  font-style: italic;
-}
-
-.book-wrapper {
-  margin-bottom: 20px;
 }
 .fake-trade-button {
   font-size: 1.2em;

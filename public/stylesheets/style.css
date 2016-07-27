@@ -2,7 +2,7 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   background: url("../images/texture.jpg") repeat; }
 
-.top-bar, .menu > li {
+.top-bar, .menu > li, .top-bar ul {
   background-color: #66310E; }
 
 .top-bar-title {

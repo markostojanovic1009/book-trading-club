@@ -1,5 +1,10 @@
 process.env.NODE_ENV = "test";
 
+/* TESTS OUTDATED, NEED TO BE UPDATED.
+ * I changed all the Book model functions to use the user's id
+ * instead of username. Tests need to be updated to reflect that.
+ */
+
 var chai = require('chai');
 var should = chai.should();
 
@@ -33,9 +38,10 @@ describe('ModelTest', function () {
                 password: 'password123',
                 email: 'foobar@gmail.com'
             };
-            db.none("INSERT INTO users(username, hash, email) VALUES($1, $2, $3)", [user.username,
+            db.none("INSERT INTO users(username, hash, email) VALUES($1, $2, $3) returning id", [user.username,
                     bcrypt.hashSync(user.password, bcrypt.genSaltSync(10)), user.email])
-                .then(function () {
+                .then(function (data) {
+                    user.id = data.id;
                     done();
                 })
                 .catch(function (error) {
@@ -171,6 +177,7 @@ describe('ModelTest', function () {
         var Book = require('../models/book_model');
 
         var username = 'username123';
+        var userId = 1;
         var firstBook = {
             name: "Introduction To Algorithms",
             author: 'Thomas H. Cormen',
@@ -199,11 +206,11 @@ describe('ModelTest', function () {
 
 
             it('should add book when passed valid info', function () {
-                return Book.addBook(username, firstBook).should.be.fulfilled;
+                return Book.addBook(userId, firstBook).should.be.fulfilled;
             });
 
             it('should display error when wrong username is passed', function() {
-                return Book.addBook('wrongusername', firstBook).should.be.rejected.and.eventually.have.property('message',
+                return Book.addBook(100, firstBook).should.be.rejected.and.eventually.have.property('message',
                     'Username wrongusername not found.');
             });
 
@@ -328,12 +335,12 @@ describe('ModelTest', function () {
 
         describe('requestBook', function() {
             it('should return an error when wrong username is passed', function() {
-                return Trade.requestBook('wrongusername', book1Id).should.be.rejected.and.eventually.have.property('message',
+                return Trade.requestBook(100, book1Id).should.be.rejected.and.eventually.have.property('message',
                     'Username wrongusername not found.');
             });
 
             it('should return an error when trying to trade books with yourself', function() {
-               return Trade.requestBook(user1.username, book1Id).should.be.rejected.and.eventually.have.property('message',
+               return Trade.requestBook(user1.id, book1Id).should.be.rejected.and.eventually.have.property('message',
                "You can't trade books with yourself.");
             });
 

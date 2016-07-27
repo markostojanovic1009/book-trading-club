@@ -1,6 +1,9 @@
 var db = require('./database');
-var User = require('./user_model');
 
+/* Book model. Promise-based. */
+
+
+/* Simply returns all the information about the books */
 var getAllBooks = function() {
     return new Promise(function(resolve, reject) {
         db.any("SELECT id, name, author, isbn, book_cover_url, owner_id FROM books WHERE borrowed_to IS NULL")
@@ -14,13 +17,13 @@ var getAllBooks = function() {
     });
 };
 
-var addBook = function(username, bookObject) {
+/* Inserts new book into the database. bookObject should have properties
+ * name, author, isbn and book_cover_url.
+ */
+var addBook = function(userId, bookObject) {
     return new Promise(function(resolve, reject) {
-        User.getUserId(username)
-            .then(function(id) {
-                return db.none("INSERT INTO books(name, author, isbn, book_cover_url, borrowed_to, owner_id) VALUES" +
-                    "($2, $3, $4, $5, null, $1)", [id, bookObject.name, bookObject.author, bookObject.isbn, bookObject.book_cover_url]);
-            })
+            return db.none("INSERT INTO books(name, author, isbn, book_cover_url, borrowed_to, owner_id) VALUES" +
+                 "($2, $3, $4, $5, null, $1)", [userId, bookObject.name, bookObject.author, bookObject.isbn, bookObject.book_cover_url])
             .then(function() {
                 resolve();
             })
@@ -31,12 +34,9 @@ var addBook = function(username, bookObject) {
     });
 };
 
-var getUserBooks = function(username) {
+var getUserBooks = function(userId) {
   return new Promise(function(resolve, reject) {
-      User.getUserId(username)
-          .then(function(id) {
-              return db.any("SELECT id, name, author, isbn, book_cover_url, borrowed_to FROM books WHERE owner_id=$1", [id]);
-          })
+      return db.any("SELECT id, name, author, isbn, book_cover_url, borrowed_to FROM books WHERE owner_id=$1", [userId])
           .then(function(books) {
               resolve(books);
           })
@@ -46,12 +46,9 @@ var getUserBooks = function(username) {
   });
 };
 
-var getUserBooksIds = function(username) {
+var getUserBooksIds = function(userId) {
     return new Promise(function(resolve, reject) {
-        User.getUserId(username)
-            .then(function(id) {
-                return db.any("SELECT id FROM books WHERE owner_id=$1", [id]);
-            })
+        return db.any("SELECT id FROM books WHERE owner_id=$1", [userId])
             .then(function(bookIds) {
                 resolve(bookIds);
             })
@@ -67,6 +64,8 @@ var getBookOwner = function(bookId) {
             .then(function(data) {
                 if(data)
                     resolve(data.owner_id);
+                else
+                    resolve(null);
             })
             .catch(function(error) {
                 reject(error);
@@ -75,6 +74,9 @@ var getBookOwner = function(bookId) {
     });
 };
 
+/* Gets all the books when sent an array of ids. bookIds needs to be an array
+ * of bookIds, otherwise an empty array is returned.
+ */
 var getBooksById = function(bookIds) {
     if(bookIds.length == 0)
         return Promise.resolve([]);
@@ -95,11 +97,25 @@ var getBooksById = function(bookIds) {
     });
 };
 
+var getRandomBooks = function(numberOfBooks) {
+    return new Promise(function(resolve, reject) {
+        db.any("SELECT name, author, book_cover_url FROM books WHERE random() < 0.5 AND borrowed_to IS NULL LIMIT $1", [numberOfBooks])
+            .then(function (data) {
+                resolve(data);
+            })
+            .catch(function (error) {
+                console.log(error);
+                reject(error);
+            });
+    });
+};
+
 module.exports = {
     getAllBooks: getAllBooks,
     addBook: addBook,
     getUserBooks: getUserBooks,
     getUserBooksIds: getUserBooksIds,
     getBookOwner: getBookOwner,
-    getBooksById: getBooksById
+    getBooksById: getBooksById,
+    getRandomBooks: getRandomBooks
 };

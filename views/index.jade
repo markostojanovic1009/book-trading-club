@@ -1,3 +1,4 @@
+include __book_list
 extends layout
 
 block pageCSS
@@ -5,25 +6,38 @@ block pageCSS
 
 block content
   .main-wrapper
-    .row
-      .small-12.large-4.columns.intro-tile-wrapper
-        .intro-tile
-          .intro-tile-header Step 1
-          p.intro-tile-text
-           | Sign up for our amazing service that enables you to trade books with people around the world.
+    if(!user)
+      .row.intro-text
+        .small-12.large-4.columns.intro-tile-wrapper
+          .intro-tile
+            .intro-tile-header Step 1
+            p.intro-tile-text
+             | Sign up for our amazing service that enables you to trade books with people around the world.
 
-      .small-12.large-4.columns.intro-tile-wrapper
-        .intro-tile
-          .intro-tile-header Step 2
-          p.intro-tile-text
-            | Browse the books posted by our users which span a vast variety of genres and themes. You can also
-            | put your own books that you are willing to trade with other people.
+        .small-12.large-4.columns.intro-tile-wrapper
+          .intro-tile
+            .intro-tile-header Step 2
+            p.intro-tile-text
+              | Browse the books posted by our users which span a vast variety of genres and themes. You can also
+              | put your own books that you are willing to trade with other people.
 
-      .small-12.large-4.columns.intro-tile-wrapper
-        .intro-tile
-          .intro-tile-header Step 3
-          p.intro-tile-text
-            | Send the trade request for the books you like and wait for the other user
-            | to accept. This completes the trade and lets you enjoy reading
-            | without having to spend a dime!
+        .small-12.large-4.columns.intro-tile-wrapper
+          .intro-tile
+            .intro-tile-header Step 3
+            p.intro-tile-text
+              | Send the trade request for the books you like and wait for the other user
+              | to accept. This completes the trade and lets you enjoy reading
+              | without having to spend a dime!
+    else
+      if(randomBooks)
+        .row
+          .small-12.column.recommendations-header Some books that may interest you
+        .row.book-recommendations
+          each randomBook in randomBooks
+            +list_books(randomBook)
+      else
+        .small-12.column.recommendations-header Explore the vast library of books
+      .row
+        .small-12.column.button-wrapper
+          a.see-more-button(href="/books") See more books
 

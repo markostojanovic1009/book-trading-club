@@ -1,23 +1,18 @@
 var db = require('./database');
 var Book = require('./book_model');
-var User = require('./user_model');
 
-var requestBook = function(username, bookId) {
-    var requestBy, requestTo;
+var requestBook = function(userId, bookId) {
+    var requestTo;
     return new Promise(function(resolve, reject) {
-       User.getUserId(username)
-           .then(function(requestById) {
-             requestBy = requestById;
-             return Book.getBookOwner(bookId);
-           })
+        return Book.getBookOwner(bookId)
            .then(function(requestToId) {
                requestTo = requestToId;
-               if(requestTo == requestBy) {
+               if(requestTo == userId) {
                   return Promise.reject({
                        message: "You can't trade books with yourself."
                    });
                }
-               return db.one("SELECT COUNT(*) FROM trades WHERE requested_book=$1 AND request_by=$2", [bookId, requestBy]);
+               return db.one("SELECT COUNT(*) FROM trades WHERE requested_book=$1 AND request_by=$2", [bookId, userId]);
            })
            .then(function(trade){
                if(trade.count > 0)
@@ -25,7 +20,7 @@ var requestBook = function(username, bookId) {
                        message: "You have already requested to trade this book."
                    });
                return db.none('INSERT INTO trades(request_by, request_to, requested_book, trade_accepted, trade_start, trade_end)' +
-                   ' VALUES($1, $2, $3, null, null, null)', [requestBy, requestTo, bookId]);
+                   ' VALUES($1, $2, $3, null, null, null)', [userId, requestTo, bookId]);
             })
            .then(function() {
                resolve();
@@ -36,14 +31,9 @@ var requestBook = function(username, bookId) {
     });
 };
 
-var acceptTrade = function(username, requestedBookId, tradeEndDate) {
-    var userId;
+var acceptTrade = function(userId, requestedBookId, tradeEndDate) {
     return new Promise(function(resolve, reject) {
-        User.getUserId(username)
-            .then(function(uId) {
-                userId = uId;
-                return db.any("SELECT COUNT(*) FROM trades WHERE requested_book=$1", [requestedBookId]);
-            })
+        return db.any("SELECT COUNT(*) FROM trades WHERE requested_book=$1", [requestedBookId])
             .then(function(trade) {
                 if(trade.count > 0) {
                     console.log("Book traded");
@@ -67,14 +57,9 @@ var acceptTrade = function(username, requestedBookId, tradeEndDate) {
     });
 };
 
-var declineTrade = function(username, requestedBookId) {
-    var userId;
+var declineTrade = function(userId, requestedBookId) {
     return new Promise(function(resolve, reject) {
-        User.getUserId(username)
-            .then(function(uId) {
-                userId = uId;
-                return db.any("SELECT COUNT(*) FROM trades WHERE requested_book=$1", [requestedBookId]);
-            })
+        return db.any("SELECT COUNT(*) FROM trades WHERE requested_book=$1", [requestedBookId])
             .then(function(trade) {
                 if(trade.count > 0)
                     reject({
@@ -93,13 +78,10 @@ var declineTrade = function(username, requestedBookId) {
     });
 };
 
-var getUserTrades = function(username) {
+var getUserTrades = function(userId) {
     return new Promise(function(resolve, reject) {
-       User.getUserId(username)
-           .then(function(userId) {
-               return db.any('SELECT request_by, request_to, b.id, b.name, b.author, b.book_cover_url, trade_accepted FROM trades as t ' +
-                   'JOIN books as b ON t.requested_book=b.id WHERE t.request_to=$1 OR t.request_by=$1', [userId]);
-           })
+           return db.any('SELECT request_by, request_to, b.id, b.name, b.author, b.book_cover_url, trade_accepted FROM trades as t ' +
+                'JOIN books as b ON t.requested_book=b.id WHERE t.request_to=$1 OR t.request_by=$1', [userId])
            .then(function(userTrades){
                resolve(userTrades);
            })

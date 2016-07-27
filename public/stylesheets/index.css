@@ -3,12 +3,34 @@
 /* Medium only */
 /* Large and up */
 /* Large only */
+.book-wrapper {
+  margin-bottom: 30px; }
+
+.book-cover {
+  display: inline-block; }
+  .book-cover img {
+    width: 100px; }
+
+.row-margin {
+  margin-bottom: 20px; }
+
+.book-info {
+  display: inline-block;
+  width: 75%;
+  margin-left: 20px;
+  vertical-align: top;
+  text-align: center;
+  color: #978046; }
+  @media screen and (max-width: 39.9375em) {
+    .book-info {
+      width: 55%; } }
+
+.book-title {
+  font-style: italic; }
+
 @media screen and (min-width: 40em) {
   body {
     background: url("../images/index_background.jpeg") no-repeat; } }
-
-.main-wrapper {
-  margin-top: 200px; }
 
 .intro-tile-wrapper {
   margin-bottom: 100px;
@@ -19,15 +41,47 @@
     padding: 20px;
     color: #978046;
     font-weight: bold;
-    font-size: 1.4em;
-    -webkit-text-stroke: 0.2px black;
-    /* If we weren't using text-shadow, we'd set a fallback color
-       and use this to set color instead
-      -webkit-text-fill-color: white; */
-    text-shadow: 0.2px 0.2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; }
+    font-size: 1.4em; }
 
 .intro-tile-header {
   margin-bottom: 20px;
   font-size: 1.8em; }
+
+.main-wrapper {
+  background: url("../images/texture.jpg") repeat;
+  width: 80%;
+  height: 100%;
+  margin-right: auto;
+  margin-left: auto; }
+  @media screen and (min-width: 40em) {
+    .main-wrapper {
+      padding-top: 100px; } }
+
+.recommendations-header {
+  text-align: center;
+  font-size: 2em;
+  color: #978046; }
+  @media screen and (max-width: 39.9375em) {
+    .recommendations-header {
+      margin: 20px 0 20px; } }
+  @media screen and (min-width: 40em) {
+    .recommendations-header {
+      margin-bottom: 100px; } }
+
+.button-wrapper {
+  text-align: center;
+  margin-top: 40px; }
+
+.see-more-button {
+  padding: 15px;
+  font-size: 1.4em;
+  font-weight: bold;
+  background-color: #66310E;
+  border: none;
+  border-radius: 20px;
+  color: #f9f9f9; }
+  .see-more-button:hover {
+    background-color: #8C4313;
+    color: #f9f9f9; }
 
 /*# sourceMappingURL=index.css.map */

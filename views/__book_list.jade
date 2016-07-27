@@ -1,0 +1,11 @@
+mixin list_books(book, largeoffset)
+    .small-12.large-6.columns(class="large-offset-" + largeoffset)
+        .book-wrapper
+            .book-cover
+                img(src=book.book_cover_url)
+            .book-info
+                h3.book-title= book.name
+                .book-author
+                    h5 by #{book.author}
+                if(book.borrowed_to)
+                    p.borrowed You lent this book

@@ -1,12 +1,9 @@
 @import "__breakpoint";
+@import "__book_template";
 body {
   @include medium-up {
     background: url('../images/index_background.jpeg') no-repeat;
   }
-}
-
-.main-wrapper {
-  margin-top: 200px;
 }
 
 .intro-tile-wrapper {
@@ -20,21 +17,6 @@ body {
     color: #978046;
     font-weight: bold;
     font-size: 1.4em;
-    -webkit-text-stroke: 0.2px black;
-
-    /* If we weren't using text-shadow, we'd set a fallback color
-       and use this to set color instead
-      -webkit-text-fill-color: white; */
-
-
-    text-shadow:
-            0.2px 0.2px 0 #000,
-              /* Simulated effect for Firefox and Opera
-                 and nice enhancement for WebKit */
-            -1px -1px 0 #000,
-            1px -1px 0 #000,
-            -1px  1px 0 #000,
-            1px  1px 0 #000;
   }
 }
 
@@ -42,4 +24,47 @@ body {
 .intro-tile-header {
   margin-bottom: 20px;
   font-size: 1.8em;
+}
+
+
+.main-wrapper {
+  background: url("../images/texture.jpg") repeat;
+  width: 80%;
+  height: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  @include medium-up {
+    padding-top: 100px;
+  }
+}
+
+.recommendations-header {
+  text-align: center;
+  @include small {
+    margin: 20px 0 20px;
+  }
+  @include medium-up {
+    margin-bottom: 100px;
+  }
+  font-size: 2em;
+  color: #978046;
+}
+
+.button-wrapper {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.see-more-button {
+  padding: 15px;
+  font-size: 1.4em;
+  font-weight: bold;
+  background-color: #66310E;
+  border: none;
+  border-radius: 20px;
+  color: #f9f9f9;
+  &:hover {
+    background-color: #8C4313;
+    color: #f9f9f9;
+  }
 }

@@ -3,13 +3,16 @@
 /* Medium only */
 /* Large and up */
 /* Large only */
-.main-wrapper {
-  margin-top: 100px; }
+.book-wrapper {
+  margin-bottom: 30px; }
 
 .book-cover {
   display: inline-block; }
   .book-cover img {
     width: 100px; }
+
+.row-margin {
+  margin-bottom: 20px; }
 
 .book-info {
   display: inline-block;
@@ -25,8 +28,8 @@
 .book-title {
   font-style: italic; }
 
-.book-wrapper {
-  margin-bottom: 20px; }
+.main-wrapper {
+  margin-top: 100px; }
 
 .fake-trade-button {
   font-size: 1.2em;

@@ -19,7 +19,7 @@ var dbOptionsTest = {
 var dbOptions = {
     development: dbOptionsDevelopment,
     test: dbOptionsTest,
-    production: process.env.DATABSE_URL
+    production: process.env.DATABASE_URL
 };
 
 var db = pgp(dbOptions[app.get('env')]);
